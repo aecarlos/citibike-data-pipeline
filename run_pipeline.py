@@ -2,11 +2,15 @@ import subprocess
 import sys
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Robust path configuration
 BASE_DIR = Path(__file__).resolve().parent
 INGESTION_DIR = BASE_DIR / "ingestion"
 DBT_DIR = BASE_DIR / "dbt"
+
+env_path = BASE_DIR / "configs" / ".env"
+load_dotenv(dotenv_path=env_path)
 
 def run_python_script(script_name):
     """Executes a Python script located within the ingestion directory."""
@@ -23,10 +27,11 @@ def run_dbt(select_models=None):
     """Triggers dbt transformations. Optional: select specific models."""
     print(f"🏗️  Starting dbt transformations...")
 
+    PROFILES_DIR = Path.home() / ".dbt"
     dbt_command = [
         "dbt", "run",
         "--project-dir", str(DBT_DIR),
-        "--profiles-dir", str(DBT_DIR)
+        "--profiles-dir", str(PROFILES_DIR)
     ]
 
     if select_models:
