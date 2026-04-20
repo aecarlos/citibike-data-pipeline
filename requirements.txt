@@ -8,6 +8,20 @@ click==8.3.2
 colorama==0.4.6
 cramjam==2.11.0
 cryptography==46.0.0
+
+# GCP Services
+google-cloud-storage==2.10.0
+google-cloud-bigquery==3.10.0
+
+# Data Processing & Storage
+numpy<2
+pandas>=2.0.0
+pyarrow==13.0.0
+
+# API & Network
+requests==2.31.0
+
+# Transformation (dbt)
 dbt-bigquery==1.5.3
 dbt-core==1.5.11
 dbt-extractor==0.4.1
