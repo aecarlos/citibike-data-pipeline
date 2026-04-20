@@ -1,6 +1,6 @@
 # 🚲 CitiBike NYC: End-to-End Data Engineering Pipeline
 
-[![Dashboard](https://img.shields.io/badge/Looker%20Studio-Live%20Dashboard-blue?style=for-the-badge&logo=googlestreams)](https://datastudio.google.com/s/pOa7a2lKIbU)
+[![Dashboard](https://img.shields.io/badge/Looker%20Studio-Live%20Dashboard-blue?style=for-the-badge&logo=googlestreams)](https://datastudio.google.com/reporting/c9f44950-67e5-45ca-8f33-2705a7755096)
 
 ## 1. Project Overview
 This project is an automated **End-to-End Data Pipeline** designed to ingest, store, and transform NYC CitiBike data. It handles millions of historical trip records, station metadata, and real-time station availability.

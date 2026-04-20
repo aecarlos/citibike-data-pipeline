@@ -22,7 +22,10 @@ def fetch_data():
     stations = data["data"]["stations"]
 
     df = pd.DataFrame(stations)
+    # This ensures Looker has a valid "current" date to display
+    df["extraction_timestamp"] = datetime.now(timezone.utc)
 
+    # Filter and organize columns
     df = df[
         [
             "station_id",
@@ -32,6 +35,7 @@ def fetch_data():
             "is_renting",
             "is_returning",
             "last_reported",
+            "extraction_timestamp",
         ]
     ]
 
