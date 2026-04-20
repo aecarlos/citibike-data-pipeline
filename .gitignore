@@ -1,0 +1,44 @@
+# === CREDENTIALS & SECRETS ===
+# Never upload your Google Cloud keys or environment variables
+configs/*.json
+.env
+credentials/
+*.pem
+
+# === PYTHON ===
+# Ignore system files and compiled code
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+
+# Virtual Environments (Always ignore these; use requirements.txt instead)
+venv/
+.venv/
+env/
+bin/
+lib/
+include/
+
+# === DATA & LOGS ===
+# Prevent large data files from bloating your repository
+data/
+*.parquet
+*.csv
+*.zip
+*.log
+logs/
+
+# === dbt (Data Build Tool) ===
+# Ignore temporary build files and logs
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+# Only include profiles.yml if it contains NO sensitive info (safer to ignore)
+dbt/profiles.yml
+
+# === SYSTEM & IDE ===
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

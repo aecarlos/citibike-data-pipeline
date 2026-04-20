@@ -1,0 +1,11 @@
+raw_data_path: data/raw/citibike_trips.csv
+processed_data_path: data/processed/citibike_trips_cleaned.parquet
+gcs:
+  bucket: ${GCS_BUCKET}
+  raw_path: raw/citibike_trips.csv
+bigquery:
+  project_id: ${GCP_PROJECT_ID}
+  dataset: ${GCP_DATASET}
+  raw_table: ${GCP_RAW_TABLE}
+  fact_table: ${GCP_FACT_TABLE}
+  agg_table: ${GCP_AGG_TABLE}

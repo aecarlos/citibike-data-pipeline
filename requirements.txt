@@ -1,0 +1,17 @@
+# GCP Services
+google-cloud-storage==2.10.0
+google-cloud-bigquery==3.10.0
+
+# Data Processing & Storage
+pandas==2.1.1
+pyarrow==13.0.0
+
+# API & Network
+requests==2.31.0
+
+# Transformation (dbt)
+dbt-bigquery==1.5.3
+
+# Configuration & Environment
+python-dotenv==1.0.0
+pyyaml==6.0.1

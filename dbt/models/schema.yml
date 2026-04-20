@@ -1,0 +1,48 @@
+version: 2
+
+sources:
+  - name: citibike_raw
+    schema: "{{ env_var('GCP_DATASET') }}"
+    tables:
+      - name: raw_citibike_trips
+        description: "Raw Citi Bike trip data loaded from GCS"
+
+      - name: raw_citibike_stations
+        description: "Raw Citi Bike station information (static metadata)"
+
+      - name: raw_citibike_station_status
+        description: "Real-time station status data from GBFS feed"
+
+# -------------------------
+# STAGING MODELS
+# -------------------------
+models:
+  - name: stg_citibike_trips
+    description: "Cleaned Citi Bike trip staging view"
+
+  - name: stg_citibike_stations
+    description: "Cleaned Citi Bike station metadata (static)"
+
+  - name: stg_citibike_station_status
+    description: "Cleaned Citi Bike real-time station status"
+
+# -------------------------
+# CORE FACT TABLES
+# -------------------------
+  - name: fct_citibike_trips
+    description: "Fact table with one row per Citi Bike trip"
+
+# -------------------------
+# MARTS (AGGREGATIONS)
+# -------------------------
+  - name: mart_daily_rides
+    description: "Daily aggregated metrics for Looker Studio reporting"
+
+  - name: dim_stations
+    description: "Dimension table for Citi Bike stations (static attributes)"
+
+  - name: mart_station_metrics
+    description: "Station-level infrastructure metrics (capacity, distribution)"
+
+  - name: mart_station_realtime_metrics
+    description: "Real-time station metrics combining infrastructure and live status (availability, emptiness, operational state)"
