@@ -42,7 +42,7 @@ The pipeline is automated via `crontab` to ensure the data stays current without
 **To view the active crontab on the VM:**
 ```bash
 crontab -l
-
+```
 ## 5. Data Warehouse Optimization
 To ensure high performance and lower query costs in BigQuery, the following strategies were implemented:
 
