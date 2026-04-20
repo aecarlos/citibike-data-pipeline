@@ -62,7 +62,7 @@ The data is transformed using 8 dbt models focused on data quality and business 
 ### Installation
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/YOUR_USERNAME/citibike-data-pipeline.git](https://github.com/YOUR_USERNAME/citibike-data-pipeline.git)
+    git clone [https://github.com/aecarlos/citibike-data-pipeline.git](https://github.com/aecarlos/citibike-data-pipeline.git)
     cd citibike-data-pipeline
     ```
 2.  **Configuration:**
