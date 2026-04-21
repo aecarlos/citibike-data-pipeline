@@ -7,6 +7,7 @@ with source as (
 
 select
     cast(station_id as string) as station_id,
+
     cast(num_bikes_available as int64) as num_bikes_available,
     cast(num_docks_available as int64) as num_docks_available,
 
@@ -14,24 +15,23 @@ select
     cast(is_renting as int64) = 1 as is_renting,
     cast(is_returning as int64) = 1 as is_returning,
 
-    -- Clean the API timestamp
+    -- =========================================
+    -- FIXED TIMESTAMP NORMALIZATION
+    -- =========================================
+
     case
+        -- nanoseconds → micros (FORZANDO INT64)
+        when cast(last_reported as int64) > 1000000000000000000
+            then timestamp_micros(
+                cast(cast(last_reported as int64) / 1000 as int64)
+            )
+
+        -- seconds epoch
         when cast(last_reported as int64) between 946684800 and 4102444800
-        then timestamp_seconds(cast(last_reported as int64))
-        else null
-    end as last_reported,
-
-    -- ADD THESE TWO:
-    extraction_timestamp, -- The real-time stamp from your Python script
-
-    -- Fallback logic: Use API time if valid, otherwise use ingestion time
-    coalesce(
-        case
-            when cast(last_reported as int64) between 946684800 and 4102444800
             then timestamp_seconds(cast(last_reported as int64))
-            else null
-        end,
-        extraction_timestamp
-    ) as status_timestamp
+
+        -- garbage
+        else null
+    end as last_reported
 
 from source

@@ -4,11 +4,12 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Robust path configuration
+# --- CONFIGURATION & PATHS ---
 BASE_DIR = Path(__file__).resolve().parent
 INGESTION_DIR = BASE_DIR / "ingestion"
 DBT_DIR = BASE_DIR / "dbt"
 
+# Load environment variables from the config folder
 env_path = BASE_DIR / "configs" / ".env"
 load_dotenv(dotenv_path=env_path)
 
@@ -24,10 +25,24 @@ def run_python_script(script_name):
         sys.exit(1)
 
 def run_dbt(select_models=None):
-    """Triggers dbt transformations. Optional: select specific models."""
+    """
+    Triggers dbt transformations with dynamic profile detection.
+    Works seamlessly on both Local (project-level) and VM (system-level).
+    """
     print(f"🏗️  Starting dbt transformations...")
 
-    PROFILES_DIR = Path.home() / ".dbt"
+    # --- DYNAMIC PROFILE DETECTION ---
+    # 1. Try to find profiles.yml inside the project first (Local portability)
+    project_profile = DBT_DIR / "profiles.yml"
+
+    if project_profile.exists():
+        PROFILES_DIR = DBT_DIR
+        print(f"📂 Mode: Using PROJECT-LEVEL profile found in {PROFILES_DIR}")
+    else:
+        # 2. Fallback to the system hidden folder (Default VM behavior)
+        PROFILES_DIR = Path.home() / ".dbt"
+        print(f"🏠 Mode: Project profile not found. Using SYSTEM-LEVEL at {PROFILES_DIR}")
+
     dbt_command = [
         "dbt", "run",
         "--project-dir", str(DBT_DIR),
@@ -57,8 +72,8 @@ if __name__ == "__main__":
             "upload_to_gcs.py",
             "load_station_status_to_bq.py"
         ]
-        # We only run the status-related models in dbt
-        dbt_filter = "mart_station_status" # Replace with your actual model name
+        # Targeting specific dbt model for status updates
+        dbt_filter = "+mart_station_realtime_metrics"
     else:
         print("🐘 RUNNING FULL DAILY PIPELINE (HEAVY MODE)")
         scripts = [
@@ -70,12 +85,14 @@ if __name__ == "__main__":
             "load_stations_to_bq.py",
             "load_station_status_to_bq.py"
         ]
-        dbt_filter = None # Run everything
+        dbt_filter = None # Run the whole project
 
-    print("--- CITIBIKE DATA PIPELINE ---\n")
+    print("\n--- CITIBIKE DATA PIPELINE ---\n")
 
+    # Step 1: Run Ingestion Scripts
     for script in scripts:
         run_python_script(script)
         print("-" * 30)
 
+    # Step 2: Run dbt Transformations
     run_dbt(select_models=dbt_filter)

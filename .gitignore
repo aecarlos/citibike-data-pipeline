@@ -36,7 +36,10 @@ dbt/logs/
 dbt/dbt_packages/
 # Only include profiles.yml if it contains NO sensitive info (safer to ignore)
 dbt/profiles.yml
-
+# dbt runtime artifacts (IMPORTANTE)
+dbt/macros/
+dbt/dbt_packages/
+dbt/.user.yml
 # === SYSTEM & IDE ===
 .DS_Store
 Thumbs.db

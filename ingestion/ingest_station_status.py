@@ -22,27 +22,54 @@ def fetch_data():
     stations = data["data"]["stations"]
 
     df = pd.DataFrame(stations)
-    # This ensures Looker has a valid "current" date to display
-    df["extraction_timestamp"] = datetime.now(timezone.utc)
 
-    # Filter and organize columns
-    df = df[
-        [
-            "station_id",
-            "num_bikes_available",
-            "num_docks_available",
-            "is_installed",
-            "is_renting",
-            "is_returning",
-            "last_reported",
-            "extraction_timestamp",
-        ]
+    # -----------------------------
+    # 1. SELECT COLUMNS (safe)
+    # -----------------------------
+    expected_cols = [
+        "station_id",
+        "num_bikes_available",
+        "num_docks_available",
+        "is_installed",
+        "is_renting",
+        "is_returning",
+        "last_reported",
     ]
 
+    df = df[expected_cols].copy()
+
+    # -----------------------------
+    # 2. CLEAN station_id
+    # -----------------------------
     df["station_id"] = df["station_id"].astype(str)
 
-    df["last_reported"] = pd.to_datetime(df["last_reported"], unit="s", errors="coerce")
+    # -----------------------------
+    # 3. FIX last_reported (CRITICAL FIX)
+    # -----------------------------
+
+    df["last_reported"] = pd.to_numeric(df["last_reported"], errors="coerce")
+
+    df["last_reported"] = pd.to_datetime(
+        df["last_reported"],
+        unit="ns",
+        errors="coerce",
+        utc=True
+    )
+
+    # Remove invalid epoch values (very old / garbage data)
+    cutoff = pd.Timestamp("2020-01-01", tz="UTC")
+    df.loc[df["last_reported"] < cutoff, "last_reported"] = pd.NaT
+
+    # -----------------------------
+    # 4. INGESTION TIMESTAMP
+    # -----------------------------
     df["ingestion_time"] = datetime.now(timezone.utc)
+
+    # -----------------------------
+    # 5. DEBUG OPTIONAL (can remove later)
+    # -----------------------------
+    print(f"📊 Rows: {len(df)}")
+    print(f"❗ Null last_reported: {df['last_reported'].isna().sum()}")
 
     return df
 

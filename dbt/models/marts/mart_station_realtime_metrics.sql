@@ -39,9 +39,7 @@ select
     (st.is_renting and st.is_returning) as is_operational,
 
     -- Timestamps
-    st.last_reported,        -- The cleaned API time (can be null)
-    st.extraction_timestamp, -- The exact time your VM script ran
-    st.status_timestamp      -- The "Bulletproof" time for Looker (API time OR Ingestion time)
+    st.last_reported        -- Solo el tiempo de la API
 
 from stations s
 left join status st
